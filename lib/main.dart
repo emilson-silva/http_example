@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -7,7 +10,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,6 +31,33 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Future<void> callBackend() async {
+    Map<String, String> hearders = {
+      'content-type': 'application/json',
+    };
+
+    http.Response response = await http.get(
+      Uri.parse('https://jsonplaceholder.typicode.com/posts'),
+      headers: hearders,
+    );
+
+    if (response.statusCode == 200) {
+      List result = json.decode(response.body);
+
+      for (var item in result) {
+        print(item['title']);
+      }
+    } else {
+      print('aconteceu um erro: ${response.statusCode}');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    callBackend();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
