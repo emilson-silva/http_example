@@ -1,7 +1,5 @@
-import 'dart:convert';
-
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 void main() {
   runApp(const MyApp());
@@ -42,24 +40,20 @@ class _MyHomePageState extends State<MyHomePage> {
       'userId': 1,
     };
 
-    http.Response response = await http.post(
-      Uri.parse('https://jsonplaceholder.typicode.com/posts'),
-      headers: hearders,
-      body: json.encode(body),
-    );
+    final dio = Dio();
 
-    //Respostas de sucesso (200-299),
-
-    if (response.statusCode >= 200 && response.statusCode < 300) {
-      print(response.body);
-
-      // List result = json.decode(response.body);
-
-      // for (var item in result) {
-      //   print(item['title']);
-      // }
-    } else {
-      print('aconteceu um erro: ${response.statusCode}');
+    try {
+      Response response = await dio.get(
+        'https://jsonplaceholder.typicode.com/posts',
+        options: Options(
+          headers: hearders,
+        ),
+      );
+      print(response.data);
+    } catch (e) {
+      print(
+        'Erro generico',
+      );
     }
   }
 
