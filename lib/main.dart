@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
@@ -43,17 +45,18 @@ class _MyHomePageState extends State<MyHomePage> {
     final dio = Dio();
 
     try {
-      Response response = await dio.get(
+      Response response = await dio.post(
         'https://jsonplaceholder.typicode.com/posts',
         options: Options(
           headers: hearders,
         ),
+        data: body,
       );
+
       print(response.data);
-    } catch (e) {
-      print(
-        'Erro generico',
-      );
+    } on DioError catch (e) {
+      print('Erro na request: ${e.response?.statusCode}');
+      //print('Erro generico: $e');
     }
   }
 
